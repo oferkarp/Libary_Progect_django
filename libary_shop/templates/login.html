@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div style="display: flex; justify-content: center; align-items: center; height: 80vh; padding: 20px;">
+    <div style="text-align: center;">
+        {% if user.is_authenticated %}
+            <p>Welcome, {{ user.username }}!</p>
+            <form method="post" action="{% url 'user_logout' %}">
+                {% csrf_token %}
+                <input type="submit" value="Logout" class="btn btn-primary" />
+            </form>
+        {% else %}
+            <p>Welcome, Guest!</p>
+            <h2>Login</h2>
+            <div>
+                <form method="post" action="{% url 'login' %}">
+                    {% csrf_token %}
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="username" required /><br />
+
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" name="password" required /><br />
+
+                    <input type="submit" value="Login" class="btn btn-primary" />
+                    <a href="{% url 'register' %}" class="btn btn-primary">Register</a>
+                </form>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

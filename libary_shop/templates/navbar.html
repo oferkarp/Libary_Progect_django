@@ -16,27 +16,34 @@
           />
         </a>
       </div>
-      <div class="collapse navbar-collapse" id="myNavbar">
-        <ul class="nav navbar-nav">
-          <li><a href="{% url 'Books_available' %}">Books availble for Loan</a></li>
-          <li><a href="{% url 'Books_rent' %}">My Loans</a></li>
-        </ul>
-        <form class="navbar-form navbar-right" role="search" action="{% url 'all_books' %}" method="get">
-          <div class="form-group">
-            <input type="text" class="form-control" name="search_text" placeholder="Search book" />
-          </div>
-          <!-- Change the "Submit" button to a magnifying glass icon -->
-          <button type="submit" class="btn btn-default">
-            <span class="glyphicon glyphicon-search"></span>
-          </button>
-        </form>
-        
-        <ul class="nav navbar-nav navbar-right">
-          <li>
-            <a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a>
+       <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav">
+        <li><a href="{% url 'Books_available' %}">Books Available for Loan</a></li>
+        <li><a href="{% url 'Books_rent' %}">My Loans</a></li>
+      </ul>
+      <form class="navbar-form navbar-right" role="search" action="{% url 'all_books' %}" method="get">
+        <div class="form-group">
+          <input type="text" class="form-control" name="search_text" placeholder="Search book" />
+        </div>
+        <button type="submit" class="btn btn-default">
+          <span class="glyphicon glyphicon-search"></span>
+        </button>
+      </form>
+      <ul class="nav navbar-nav navbar-right">
+        {% if user.is_authenticated %}
+          <li class="navbar-text">
+            <span style="color: white;">Welcome, {{ user.username }}!</span>
           </li>
-        </ul>
-      </div>
+          <li>
+            <a href="{% url 'user_logout' %}" class="btn btn-outline-primary">Logout</a>
+          </li>
+        {% else %}
+          <li>
+            <a href="{% url 'login' %}" class="btn btn-outline-primary">Login</a>
+          </li>
+        {% endif %}
+      </ul>
     </div>
-  </nav>
+  </div>
+</nav>
   
