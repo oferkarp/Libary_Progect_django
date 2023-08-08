@@ -1,8 +1,8 @@
 from django.utils import timezone
 from libary_shop.models import Book,Loan,CustomUser
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth import authenticate, login, logout
-from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 
 
 # Create your views here.
@@ -16,16 +16,22 @@ def books(request):
 
     return render(request, 'index.html', {'all_books': all_books})
 
+def not_logged_in(request):
+    return render(request, 'not_logged_in.html')
 
-def books_not_on_rent(request):
-    # Fetch all loans that are currently active (loan_date is not in the future and return_date is null or in the future)
-    active_loans = Loan.objects.filter(loan_date__lte=timezone.now(), return_date__gte=timezone.now())
+@login_required(login_url='not_logged_in')  # Redirect to 'not_logged_in' view if user is not logged in
+def books_on_rent(request):
+    user = request.user
+    print("Logged in user:", user)
+    
+    active_loans = Loan.objects.filter(customer=user, loan_date__lte=timezone.now(), return_date__gte=timezone.now())
+    print("Active Loans:", active_loans)  # Add this line
 
-    # Get the list of Book objects from the active loans
-    books_not_on_rent = [loan.book for loan in active_loans]
+    for loan in active_loans:
+        print(f"Loan: customer={loan.customer}, book={loan.book}, loan_date={loan.loan_date}, return_date={loan.return_date}")
+    
+    return render(request, 'books_on_rent.html', {'active_loans': active_loans})
 
-    # Pass the active_books to the template
-    return render(request, 'books_not_on_rent.html', {'books_not_on_rent': books_not_on_rent})
 
 def books_available(request):
     # Fetch all loans that are currently active (loan_date is not in the future and return_date is null or in the future)
