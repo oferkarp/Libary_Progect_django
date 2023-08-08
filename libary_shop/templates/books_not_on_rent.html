@@ -4,7 +4,7 @@
 <div class="container-fluid bg-3 text-center">
   <h3>Books Available</h3>
   <div class="row">
-    {% for book in all_books %}
+    {% for book in books_not_on_rent %}
     <div class="col-md-3">
       <div class="card mb-4 shadow-sm">
         <img src="{% static book.image %}" alt="{{ book.name }}" class="bd-placeholder-img card-img-top" width="100%" height="225">
@@ -14,9 +14,9 @@
           <p class="card-text">Year Published: {{ book.year_published }}</p>
           <p class="card-text">Book Type: {{ book.get_book_type_display }}</p>
           <div class="d-flex justify-content-between align-items-center">
-            <div class="btn-group">
-              <a type="button" class="btn btn-sm btn-outline-secondary">View Details</a>
-              <a type="button" class="btn btn-sm btn-outline-secondary">Borrow</a>
+            <div class="button-container"   display: flex; gap: 10px;>
+              <button class="btn btn-primary loan-button">Time left </button>
+              <button class="btn btn-danger  loan-button">Return Book</button>
             </div>
           </div>
         </div>
