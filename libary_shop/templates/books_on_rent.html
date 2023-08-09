@@ -13,19 +13,33 @@
           <p class="card-text">Year Published: {{ loan.book.year_published }}</p>
           <p class="card-text">Book Type: {{ loan.book.get_book_type_display }}</p>
           <div class="d-flex justify-content-between align-items-center">
-            <div class="button-container"   display: flex; gap: 10px;>
-              <button class="btn btn-primary loan-button">Time left </button>
-              <button class="btn btn-danger  loan-button">Return Book</button>
+            <div class="button-container">
+              <button type="button" class="btn btn-primary" data-return-date="{{ loan.return_date|date:'c' }}" onclick="showTimeLeft()">See the time left</button>
+              <div class="popup" id="popup">
+                <p id="popupContent"></p>
+                <button type="button" onclick="closePopup()">Ok</button>
+              </div>
+              
+              <!-- Place the time remaining information container here -->
+              <div class="time-left-container" id="timeLeftContainer"></div>
             </div>
+            
+            <!-- Create a separate container for the centered column -->
+            <div class="center-column">
+              <!-- Move the "Return Book" button here -->
+              <button type="submit" class="btn btn-danger">Return Book</button>
+            </div>
+            
           </div>
         </div>
       </div>
     </div>
     {% empty %}
     <div class="col">
-      <h10><strong>you hane Not books on rent.</strong></h10>
+      <h10><strong>You have Not books on rent.</strong></h10>
     </div>
     {% endfor %}
   </div>
 </div>
 {% endblock %}
+

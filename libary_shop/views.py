@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
+@login_required(login_url='not_logged_in')  # Redirect to 'not_logged_in' view if user is not logged in
 def books(request):
     search_text = request.GET.get('search_text')
     all_books = Book.objects.all()
@@ -22,13 +23,13 @@ def not_logged_in(request):
 @login_required(login_url='not_logged_in')  # Redirect to 'not_logged_in' view if user is not logged in
 def books_on_rent(request):
     user = request.user
-    print("Logged in user:", user)
+    # print("Logged in user:", user)
     
     active_loans = Loan.objects.filter(customer=user, loan_date__lte=timezone.now(), return_date__gte=timezone.now())
-    print("Active Loans:", active_loans)  # Add this line
+    # print("Active Loans:", active_loans)  
 
-    for loan in active_loans:
-        print(f"Loan: customer={loan.customer}, book={loan.book}, loan_date={loan.loan_date}, return_date={loan.return_date}")
+    # for loan in active_loans:
+    #     print(f"Loan: customer={loan.customer}, book={loan.book}, loan_date={loan.loan_date}, return_date={loan.return_date}")
     
     return render(request, 'books_on_rent.html', {'active_loans': active_loans})
 
@@ -71,8 +72,6 @@ def user_logout(request):
     return redirect('all_books')
 
 
-
-
 def register(request):
     if request.method == 'POST':
         new_username = request.POST.get('new_username')
@@ -105,3 +104,15 @@ def register(request):
 
 def registration_failed(request):
     return render(request, 'registration_failed.html')
+
+
+from datetime import datetime, time, timedelta
+
+def loan_detail(request, loan_id):
+    loan = Loan.objects.get(pk=loan_id)
+    
+    # Set the time component to the end of the day (23:59:59)
+    end_of_day = time(23, 59, 59)
+    formatted_return_date = datetime.combine(loan.return_date, end_of_day)
+    
+    return render(request, 'books_on_rent.html', {'loan': loan, 'formatted_return_date': formatted_return_date})
