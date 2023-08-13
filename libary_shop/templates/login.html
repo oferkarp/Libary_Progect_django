@@ -24,6 +24,10 @@
                     <input type="submit" value="Login" class="btn btn-primary" />
                     <a href="{% url 'register' %}" class="btn btn-primary">Register</a>
                 </form>
+                <!-- Display error message if it exists -->
+                {% if error_message %}
+                    <p style="color: red;">{{ error_message }}</p>
+                {% endif %}
             </div>
         {% endif %}
     </div>

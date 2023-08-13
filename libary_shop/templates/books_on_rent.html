@@ -2,8 +2,9 @@
 {% load static %}
 {% block content %}
 <div class="container-fluid bg-3 text-center">
+  <h3>My loans</h3>
   <div class="row">
-    {% for loan in active_loans %} {# Change 'book' to 'loan' here #}
+    {% for loan in active_loans %} 
     <div class="col-md-3">
       <div class="card mb-4 shadow-sm">
         <img src="{% static loan.book.image.url %}" alt="{{ loan.book.name }}" class="bd-placeholder-img card-img-top" width="100%" height="225">
@@ -26,10 +27,12 @@
             
             <!-- Create a separate container for the centered column -->
             <div class="center-column">
-              <!-- Move the "Return Book" button here -->
-              <button type="submit" class="btn btn-danger">Return Book</button>
+              <form action="{% url 'return_book' %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="loan_id" value="{{ loan.id }}">
+                <button type="submit" class="btn btn-danger">Return Book</button>
+              </form>                       
             </div>
-            
           </div>
         </div>
       </div>

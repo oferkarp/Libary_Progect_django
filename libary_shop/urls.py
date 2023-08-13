@@ -2,15 +2,21 @@ from django.urls import path
 
 from libary_shop import views
 
+from django.conf.urls import handler404
+
+handler404 = 'libary_shop.views.custom_404'
+
+
 urlpatterns = [
     path('', views.books, name='all_books'),
-    path('Books_available_for_rent/', views.books_available, name='Books_available'),
+    path('active_books/', views.books_available, name='Books_available'),
     path('Books_on_rent/', views.books_on_rent, name='Books_rent'),
     path('login/', views.my_login, name='login'),
     path('logout/', views.user_logout, name='user_logout'), 
     path('register/', views.register, name='register'),
     path('registration_failed/', views.registration_failed, name='registration_failed'),
     path('not_logged_in/', views.not_logged_in, name='not_logged_in'),
-
+    path('loan_book/', views.loan_book, name='loan_book'),
+    path('return_book/', views.return_book, name='return_book'),
 
 ]

@@ -1,13 +1,15 @@
+from django.http import HttpResponse
 from django.utils import timezone
 from libary_shop.models import Book,Loan,CustomUser
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from datetime import datetime, time, timedelta
+
 
 
 # Create your views here.
 
-@login_required(login_url='not_logged_in')  # Redirect to 'not_logged_in' view if user is not logged in
 def books(request):
     search_text = request.GET.get('search_text')
     all_books = Book.objects.all()
@@ -17,8 +19,10 @@ def books(request):
 
     return render(request, 'index.html', {'all_books': all_books})
 
+
 def not_logged_in(request):
     return render(request, 'not_logged_in.html')
+
 
 @login_required(login_url='not_logged_in')  # Redirect to 'not_logged_in' view if user is not logged in
 def books_on_rent(request):
@@ -34,6 +38,7 @@ def books_on_rent(request):
     return render(request, 'books_on_rent.html', {'active_loans': active_loans})
 
 
+@login_required(login_url='not_logged_in')  # Redirect to 'not_logged_in' view if user is not logged in
 def books_available(request):
     # Fetch all loans that are currently active (loan_date is not in the future and return_date is null or in the future)
     active_loans = Loan.objects.filter(loan_date__lte=timezone.now(), return_date__gte=timezone.now())
@@ -63,7 +68,7 @@ def my_login(request):
             print(f"!! error login. user is:{user}")
             # If authentication fails, show an error message or redirect back to the login page
             error_message = "Invalid credentials. Please try again."
-            return render(request, 'index.html', {'error_message': error_message})
+            return render(request, 'login.html', {'error_message': error_message})
     return render(request, 'login.html')
 
 
@@ -102,11 +107,10 @@ def register(request):
 
     return render(request, 'register.html', {'user': request.user})
 
+
 def registration_failed(request):
     return render(request, 'registration_failed.html')
 
-
-from datetime import datetime, time, timedelta
 
 def loan_detail(request, loan_id):
     loan = Loan.objects.get(pk=loan_id)
@@ -116,3 +120,45 @@ def loan_detail(request, loan_id):
     formatted_return_date = datetime.combine(loan.return_date, end_of_day)
     
     return render(request, 'books_on_rent.html', {'loan': loan, 'formatted_return_date': formatted_return_date})
+
+def loan_book(request):
+    if request.method == 'GET' and 'book_id' in request.GET:
+        book_id = request.GET['book_id']
+        book = get_object_or_404(Book, pk=book_id)
+        print("****loan book****")
+
+        # Check if the book is already on loan
+        if Loan.objects.filter(book=book, return_date__isnull=True).exists():
+            return redirect('Books_available')  # Book already on loan
+        
+        # Create a new loan instance
+        loan = Loan.objects.create(customer=request.user, book=book)
+        
+        # Update return_date based on your logic (e.g., 2 weeks from loan_date)
+        loan.return_date = loan.loan_date + timedelta(days=14)
+        loan.save()
+        
+        return redirect('Books_available')  # Book successfully loaned
+    
+    return redirect('Books_available')  # Invalid or missing book_id
+
+
+def return_book(request):
+    if request.method == 'POST':
+        loan_id = request.POST.get('loan_id')
+
+        try:
+            loan = Loan.objects.get(id=loan_id)
+            print("Loan found:", loan)
+            
+            # Delete the loan
+            loan.delete()
+            
+        except Loan.DoesNotExist:
+            print("Loan does not exist.")
+
+    return redirect('Books_rent')  # Redirect to appropriate view after returning
+
+
+def custom_404(request, exception):
+    return render(request, '404.html', status=404)
