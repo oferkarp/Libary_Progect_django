@@ -60,32 +60,33 @@
         <p>Happy reading and see you again soon!</p>
     </footer>
     <script>
-      function showTimeLeft() {
-        var popup = document.getElementById("popup");
-        var popupContent = document.getElementById("popupContent");
-      
-        var returnDateStr = document.querySelector('.btn-primary').getAttribute('data-return-date');
-        console.log("returnDateStr:", returnDateStr); // Add this line
-        var returnDate = new Date(returnDateStr);
-        console.log("returnDate:", returnDate); // Add this line
-        var currentDate = new Date();
-        console.log("currentDate:", currentDate); // Add this line
+        function showTimeLeft() {
+            var popup = document.getElementById("popup");
+            var popupContent = document.getElementById("popupContent");
+        
+            var returnDateStr = document.querySelector('.btn-primary').getAttribute('data-return-date');
+            var returnDate = new Date(returnDateStr);
+            var currentDate = new Date(); // Current date and time
+        
+            // Convert both dates to UTC timestamps to ensure consistent time comparison
+            var returnDateUTC = Date.UTC(returnDate.getFullYear(), returnDate.getMonth(), returnDate.getDate(), returnDate.getHours(), returnDate.getMinutes(), returnDate.getSeconds());
+            var currentDateUTC = Date.UTC(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), currentDate.getHours(), currentDate.getMinutes(), currentDate.getSeconds());
+        
+            // Calculate time difference in milliseconds using UTC timestamps
+            var timeDiff = returnDateUTC - currentDateUTC;
+        
+            var daysLeft = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+            var hoursLeftTotal = (Math.floor(timeDiff / (1000 * 60 * 60))) + 10; // Total hours left
+            console.log("hoursLeftTotal:", hoursLeftTotal); // Add this line
+            var hoursLeft = hoursLeftTotal % 24; // Remaining hours after removing complete days
+            console.log("hoursLeft:", hoursLeft); // Add this line
 
-        // Calculate time difference in milliseconds using UTC timestamps
-        var timeDiff = returnDate.getTime() - currentDate.getTime();
-        console.log("timeDiff:", timeDiff); // Add this line
-
-        var daysLeft = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
-        console.log("daysLeft:", daysLeft); // Add this line
-
-        var hoursLeft = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        console.log("hoursLeft:", hoursLeft); // Add this line
-
-      
-        popupContent.innerHTML = "Time left for loan: " + daysLeft + " days and " + hoursLeft + " hours";
-        popup.style.display = "block";
-      }
-      
+        
+            popupContent.innerHTML = "Time left for loan: " + daysLeft + " days and " + hoursLeft + " hours";
+            popup.style.display = "block";
+        }
+        
+        
       function closePopup() {
         var popup = document.getElementById("popup");
         popup.style.display = "none";

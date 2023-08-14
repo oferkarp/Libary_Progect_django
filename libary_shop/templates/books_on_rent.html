@@ -15,17 +15,15 @@
           <p class="card-text">Book Type: {{ loan.book.get_book_type_display }}</p>
           <div class="d-flex justify-content-between align-items-center">
             <div class="button-container">
-              <button type="button" class="btn btn-primary" data-return-date="{{ loan.return_date|date:'c' }}" onclick="showTimeLeft()">See the time left</button>
+              <button type="button" class="btn btn-primary" data-return-date="{{ loan.return_date|date:'c' }}" data-loan-id="{{ loan.id }}" onclick="showTimeLeft(this)">See the time left</button>
               <div class="popup" id="popup">
-                <p id="popupContent"></p>
-                <button type="button" onclick="closePopup()">Ok</button>
+                  <p id="popupContent"></p>
+                  <button type="button" onclick="closePopup()">Ok</button>
               </div>
               
-              <!-- Place the time remaining information container here -->
-              <div class="time-left-container" id="timeLeftContainer"></div>
-            </div>
-            
-            <!-- Create a separate container for the centered column -->
+              <!-- Unique container for time remaining information -->
+              <div class="time-left-container" id="timeLeftContainer_{{ loan.id }}"></div>
+            </div>      
             <div class="center-column">
               <form action="{% url 'return_book' %}" method="post">
                 {% csrf_token %}

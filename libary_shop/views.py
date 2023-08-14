@@ -112,14 +112,6 @@ def registration_failed(request):
     return render(request, 'registration_failed.html')
 
 
-def loan_detail(request, loan_id):
-    loan = Loan.objects.get(pk=loan_id)
-    
-    # Set the time component to the end of the day (23:59:59)
-    end_of_day = time(23, 59, 59)
-    formatted_return_date = datetime.combine(loan.return_date, end_of_day)
-    
-    return render(request, 'books_on_rent.html', {'loan': loan, 'formatted_return_date': formatted_return_date})
 
 def loan_book(request):
     if request.method == 'GET' and 'book_id' in request.GET:
@@ -131,17 +123,18 @@ def loan_book(request):
         if Loan.objects.filter(book=book, return_date__isnull=True).exists():
             return redirect('Books_available')  # Book already on loan
         
-        # Create a new loan instance
-        loan = Loan.objects.create(customer=request.user, book=book)
+        # Calculate return_date based on the book type's maximum loan days
+        max_loan_days = Loan.get_max_loan_days(None, book.book_type)  # Pass the book_type
+        loan_date = timezone.now()  # Use the current time for loan_date
+        return_date = loan_date + timedelta(days=max_loan_days)
         
-        # Update return_date based on your logic (e.g., 2 weeks from loan_date)
-        loan.return_date = loan.loan_date + timedelta(days=14)
-        loan.save()
-        
+        # Create a new loan instance with calculated return_date
+        loan = Loan.objects.create(customer=request.user, book=book, loan_date=loan_date, return_date=return_date)
+        loan.save
+
         return redirect('Books_available')  # Book successfully loaned
     
     return redirect('Books_available')  # Invalid or missing book_id
-
 
 def return_book(request):
     if request.method == 'POST':
