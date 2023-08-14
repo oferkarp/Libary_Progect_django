@@ -21,5 +21,6 @@ urlpatterns = [
     path('all_loans/', views.display_all_loans, name='all_loans'),
     path('add_book/', views.add_book, name='add_book'),
     path('remove_book/<int:book_id>/', views.remove_book, name='remove_book'),
+    path('update_book/<int:book_id>/', views.update_book, name='update_book'),
 
 ]

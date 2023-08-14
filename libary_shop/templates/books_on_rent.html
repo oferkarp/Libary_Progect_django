@@ -28,7 +28,7 @@
               <form action="{% url 'return_book' %}" method="post">
                 {% csrf_token %}
                 <input type="hidden" name="loan_id" value="{{ loan.id }}">
-                <button type="submit" class="btn btn-danger">Return Book</button>
+                <button type="submit" class="btn btn-danger">Return loan</button>
               </form>                       
             </div>
           </div>

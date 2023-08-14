@@ -5,6 +5,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from datetime import datetime, time, timedelta
 from django.core.exceptions import ValidationError  
+from django.core.exceptions import ValidationError  # Import ValidationError
 
 
 
@@ -163,8 +164,6 @@ def display_all_loans(request):
     return render(request, 'all_loans.html', {'all_loans': all_loans})
 
     
-from django.core.exceptions import ValidationError  # Import ValidationError
-
 def add_book(request):
     if request.method == 'POST':
         new_name = request.POST.get('name')
@@ -190,7 +189,24 @@ def add_book(request):
 
     return render(request, 'add_book.html', {'Book': Book})  # Pass the Book model to the template context
 
+
 def remove_book(request, book_id):
     book = get_object_or_404(Book, id=book_id)
     book.delete()
     return redirect('all_books')  # Redirect to a page after successful remove book
+
+
+from .forms import UpdateBookForm
+
+def update_book(request, book_id):
+    book = get_object_or_404(Book, id=book_id)
+
+    if request.method == 'POST':
+        form = UpdateBookForm(request.POST, request.FILES, instance=book)  # Include request.FILES
+        if form.is_valid():
+            form.save()
+            return redirect('all_books')  # Redirect after successful update
+    else:
+        form = UpdateBookForm(instance=book)
+
+    return render(request, 'update_book.html', {'form': form})

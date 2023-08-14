@@ -18,9 +18,10 @@ class CustomUserAdmin(UserAdmin):
     )
 
 
-class LoanAdmin(ModelAdmin):
-     readonly_fields = ['return_date']
+# class LoanAdmin(ModelAdmin):
+#      readonly_fields = ['return_date']
 
 admin.site.register(CustomUser, CustomUserAdmin)
-admin.site.register(Loan,LoanAdmin)
+# admin.site.register(Loan,LoanAdmin)
+admin.site.register(Loan)
 admin.site.register(Book)
