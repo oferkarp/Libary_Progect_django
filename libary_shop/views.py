@@ -5,12 +5,21 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from datetime import datetime, time, timedelta
 from django.core.exceptions import ValidationError  
-from django.core.exceptions import ValidationError  # Import ValidationError
+from .forms import UpdateBookForm
+from django.contrib.auth.decorators import user_passes_test
+
 
 
 
 
 # Create your views here.
+
+def not_logged_in(request):
+    return render(request, 'not_logged_in.html')
+
+
+def is_superuser(user):
+    return user.is_superuser
 
 def books(request):
     search_text = request.GET.get('search_text')
@@ -20,10 +29,6 @@ def books(request):
         all_books = all_books.filter(name__icontains=search_text)  # Change 'name' to the appropriate field name for book titles
 
     return render(request, 'index.html', {'all_books': all_books})
-
-
-def not_logged_in(request):
-    return render(request, 'not_logged_in.html')
 
 
 @login_required(login_url='not_logged_in')  # Redirect to 'not_logged_in' view if user is not logged in
@@ -114,6 +119,7 @@ def registration_failed(request):
     return render(request, 'registration_failed.html')
 
 
+@login_required(login_url='not_logged_in')  # Redirect to 'not_logged_in' view if user is not logged in
 def loan_book(request):
     if request.method == 'GET' and 'book_id' in request.GET:
         book_id = request.GET['book_id']
@@ -138,6 +144,7 @@ def loan_book(request):
     return redirect('Books_available')  # Invalid or missing book_id
 
 
+@login_required(login_url='not_logged_in')  # Redirect to 'not_logged_in' view if user is not logged in
 def return_book(request):
     if request.method == 'POST':
         loan_id = request.POST.get('loan_id')
@@ -158,12 +165,14 @@ def return_book(request):
 def custom_404(request, exception):
     return render(request, '404.html', status=404)
 
-
+@user_passes_test(is_superuser)
+@login_required(login_url='not_logged_in')  # Redirect to 'not_logged_in' view if user is not logged in
 def display_all_loans(request):
     all_loans = Loan.objects.all()
     return render(request, 'all_loans.html', {'all_loans': all_loans})
 
-    
+@user_passes_test(is_superuser)
+@login_required(login_url='not_logged_in')  # Redirect to 'not_logged_in' view if user is not logged in    
 def add_book(request):
     if request.method == 'POST':
         new_name = request.POST.get('name')
@@ -190,14 +199,16 @@ def add_book(request):
     return render(request, 'add_book.html', {'Book': Book})  # Pass the Book model to the template context
 
 
+@user_passes_test(is_superuser)
+@login_required(login_url='not_logged_in')  # Redirect to 'not_logged_in' view if user is not logged in
 def remove_book(request, book_id):
     book = get_object_or_404(Book, id=book_id)
     book.delete()
     return redirect('all_books')  # Redirect to a page after successful remove book
 
 
-from .forms import UpdateBookForm
-
+@user_passes_test(is_superuser)
+@login_required(login_url='not_logged_in')  # Redirect to 'not_logged_in' view if user is not logged in
 def update_book(request, book_id):
     book = get_object_or_404(Book, id=book_id)
 
