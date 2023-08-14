@@ -189,3 +189,8 @@ def add_book(request):
                 pass  # You can customize error handling here
 
     return render(request, 'add_book.html', {'Book': Book})  # Pass the Book model to the template context
+
+def remove_book(request, book_id):
+    book = get_object_or_404(Book, id=book_id)
+    book.delete()
+    return redirect('all_books')  # Redirect to a page after successful remove book

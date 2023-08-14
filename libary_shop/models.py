@@ -1,7 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-from django.core.exceptions import ValidationError
-from datetime import datetime, timedelta
 from django.utils import timezone
 
 class Book(models.Model):
@@ -46,12 +44,3 @@ class Loan(models.Model):
         else:
             return 0
 
-    # def save(self, *args, **kwargs):
-    #     existing_loan = Loan.objects.filter(book=self.book, return_date__gt=timezone.now().date()).first()
-    #     if existing_loan:
-    #         if self.pk is None or (self.pk and self.pk != existing_loan.pk):
-    #             raise ValidationError("This book is already loaned and not returned yet.")
-    #     else:
-    #         self.return_date = timezone.now().date() + timedelta(days=self.get_max_loan_days())
-
-    #     super().save(*args, **kwargs)
