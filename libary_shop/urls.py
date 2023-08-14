@@ -18,5 +18,6 @@ urlpatterns = [
     path('not_logged_in/', views.not_logged_in, name='not_logged_in'),
     path('loan_book/', views.loan_book, name='loan_book'),
     path('return_book/', views.return_book, name='return_book'),
+    path('all_loans/', views.display_all_loans, name='all_loans'),
 
 ]

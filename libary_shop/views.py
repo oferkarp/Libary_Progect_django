@@ -155,3 +155,10 @@ def return_book(request):
 
 def custom_404(request, exception):
     return render(request, '404.html', status=404)
+
+
+def display_all_loans(request):
+    all_loans = Loan.objects.all()
+    return render(request, 'all_loans.html', {'all_loans': all_loans})
+
+    

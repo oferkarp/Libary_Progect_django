@@ -20,6 +20,9 @@
       <ul class="nav navbar-nav">
         <li><a href="{% url 'Books_available' %}">Books Available for Loan</a></li>
         <li><a href="{% url 'Books_rent' %}">My Loans</a></li>
+        {% if user.is_superuser %}
+        <li><a href="{% url 'all_loans' %}">All loans</a></li>
+        {% endif %}
       </ul>
       <form class="navbar-form navbar-right" role="search" action="{% url 'all_books' %}" method="get">
         <div class="form-group">
