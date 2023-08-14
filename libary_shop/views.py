@@ -1,10 +1,11 @@
-from django.http import HttpResponse
 from django.utils import timezone
 from libary_shop.models import Book,Loan,CustomUser
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from datetime import datetime, time, timedelta
+from django.core.exceptions import ValidationError  
+
 
 
 
@@ -112,7 +113,6 @@ def registration_failed(request):
     return render(request, 'registration_failed.html')
 
 
-
 def loan_book(request):
     if request.method == 'GET' and 'book_id' in request.GET:
         book_id = request.GET['book_id']
@@ -135,6 +135,7 @@ def loan_book(request):
         return redirect('Books_available')  # Book successfully loaned
     
     return redirect('Books_available')  # Invalid or missing book_id
+
 
 def return_book(request):
     if request.method == 'POST':
@@ -162,3 +163,29 @@ def display_all_loans(request):
     return render(request, 'all_loans.html', {'all_loans': all_loans})
 
     
+from django.core.exceptions import ValidationError  # Import ValidationError
+
+def add_book(request):
+    if request.method == 'POST':
+        new_name = request.POST.get('name')
+        new_author = request.POST.get('author')
+        new_year_published = request.POST.get('year_published')
+        new_book_type = request.POST.get('book_type')
+        new_image = request.FILES.get('image')  # Use request.FILES for file uploads
+
+        # print(new_name,new_author,new_year_published,new_book_type,new_image)
+
+
+        if new_name and new_author and new_year_published and new_book_type and new_image:
+            new_book = Book(name=new_name, author=new_author, year_published=new_year_published, book_type=new_book_type, image=new_image)
+            try:
+                new_book.full_clean()  # Validate the fields
+                new_book.save()  # Save the new book instance to the database
+                # print(new_book)
+
+                return redirect('all_books')  # Redirect to a page after successful book addition
+            except ValidationError as e:
+                # Handle validation errors, if any
+                pass  # You can customize error handling here
+
+    return render(request, 'add_book.html', {'Book': Book})  # Pass the Book model to the template context

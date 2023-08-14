@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div style="display: flex; justify-content: center; align-items: center; height: 80vh; padding: 20px;">
+    <div style="text-align: center;">
+        <h2>Add Book</h2>
+        <form method="post" action="{% url 'add_book' %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="name">Book Name:</label>
+                <input type="text" id="name" name="name" class="form-control" required />
+            </div>
+            <div class="form-group">
+                <label for="author">Author:</label>
+                <input type="text" id="author" name="author" class="form-control" required />
+            </div>
+            <div class="form-group">
+                <label for="year_published">Year Published:</label>
+                <input type="number" id="year_published" name="year_published" class="form-control" required />
+            </div>
+            <div class="form-group">
+                <label for="book_type">Book Type:</label>
+                <select id="book_type" name="book_type" class="form-control" required>
+                    <option value="{{ Book.BookType.TYPE_10_DAY.value }}">Up to 10 days loan</option>
+                    <option value="{{ Book.BookType.TYPE_5_DAY.value }}">Up to 5 days loan</option>
+                    <option value="{{ Book.BookType.TYPE_2_DAY.value }}">Up to 2 days loan</option>
+                </select>
+            </div>
+                       
+            
+            <div class="form-group">
+                <label for="image">Book Image:</label>
+                <input type="file" id="image" name="image" class="form-control-file" accept="image/*" required />
+            </div>
+            <input type="submit" value="Add Book" class="btn btn-primary" />
+        </form>
+    </div>
+</div>
+{% endblock %}
