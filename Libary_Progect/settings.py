@@ -76,10 +76,19 @@ WSGI_APPLICATION = 'Libary_Progect.wsgi.application'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': BASE_DIR / 'db.sqlite3',
+    # }
+     'default': {
+           'ENGINE': 'django.db.backends.postgresql_psycopg2',
+           'NAME': 'django_libary',
+           'USER': 'ofer',
+           'PASSWORD': 'R2prRjdVIJBwZKtccoze5nnETOnItuYb',
+           'HOST': 'dpg-cjejd0me546c73ct14ug-a.oregon-postgres.render.com',      
+           'PORT': '5432',
+
+        }
 }
 
 
