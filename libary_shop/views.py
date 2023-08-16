@@ -67,10 +67,10 @@ def my_login(request):
 
         if user is not None:
             login(request, user)
-            print(f"** login passed. user is:{user}")
+            # print(f"** login passed. user is:{user}")
             return redirect('all_books')  # Redirect to the homepage after successful login
         else:
-            print(f"!! error login. user is:{user}")
+            # print(f"!! error login. user is:{user}")
             # If authentication fails, show an error message or redirect back to the login page
             error_message = "Invalid credentials. Please try again."
             return render(request, 'login.html', {'error_message': error_message})
@@ -122,7 +122,7 @@ def loan_book(request):
     if request.method == 'GET' and 'book_id' in request.GET:
         book_id = request.GET['book_id']
         book = get_object_or_404(Book, pk=book_id)
-        print("****loan book****")
+        # print("****loan book****")
 
         # Check if the book is already on loan
         if Loan.objects.filter(book=book, return_date__isnull=True).exists():
@@ -149,7 +149,7 @@ def return_book(request):
 
         try:
             loan = Loan.objects.get(id=loan_id)
-            print("Loan found:", loan)
+            # print("Loan found:", loan)
             
             # Delete the loan
             loan.delete()
@@ -179,13 +179,16 @@ def add_book(request):
         new_book_type = request.POST.get('book_type')
         new_image = request.FILES.get('image')  # Use request.FILES for file uploads
 
+        # Set default image if no image is provided
+        if not new_image:
+            new_image = 'books_images/books.png'  # Set the default image path here
+
         # print(new_name,new_author,new_year_published,new_book_type,new_image)
 
 
         if new_name and new_author and new_year_published and new_book_type and new_image:
             new_book = Book(name=new_name, author=new_author, year_published=new_year_published, book_type=new_book_type, image=new_image)
             try:
-                new_book.full_clean()  # Validate the fields
                 new_book.save()  # Save the new book instance to the database
                 # print(new_book)
 
