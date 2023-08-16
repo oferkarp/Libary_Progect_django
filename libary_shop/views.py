@@ -10,8 +10,6 @@ from django.contrib.auth.decorators import user_passes_test
 
 
 
-
-
 # Create your views here.
 
 def not_logged_in(request):

@@ -59,39 +59,6 @@
         <p>Remember, a book is a friend that you can always revisit.</p>
         <p>Happy reading and see you again soon!</p>
     </footer>
-    <script>
-        function showTimeLeft() {
-            var popup = document.getElementById("popup");
-            var popupContent = document.getElementById("popupContent");
-        
-            var returnDateStr = document.querySelector('.btn-primary').getAttribute('data-return-date');
-            var returnDate = new Date(returnDateStr);
-            var currentDate = new Date(); // Current date and time
-        
-            // Convert both dates to UTC timestamps to ensure consistent time comparison
-            var returnDateUTC = Date.UTC(returnDate.getFullYear(), returnDate.getMonth(), returnDate.getDate(), returnDate.getHours(), returnDate.getMinutes(), returnDate.getSeconds());
-            var currentDateUTC = Date.UTC(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), currentDate.getHours(), currentDate.getMinutes(), currentDate.getSeconds());
-        
-            // Calculate time difference in milliseconds using UTC timestamps
-            var timeDiff = returnDateUTC - currentDateUTC;
-        
-            var daysLeft = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
-            var hoursLeftTotal = (Math.floor(timeDiff / (1000 * 60 * 60))) + 10; // Total hours left
-            console.log("hoursLeftTotal:", hoursLeftTotal); // Add this line
-            var hoursLeft = hoursLeftTotal % 24; // Remaining hours after removing complete days
-            console.log("hoursLeft:", hoursLeft); // Add this line
-
-        
-            popupContent.innerHTML = "Time left for loan: " + daysLeft + " days and " + hoursLeft + " hours";
-            popup.style.display = "block";
-        }
-        
-        
-      function closePopup() {
-        var popup = document.getElementById("popup");
-        popup.style.display = "none";
-      }
-      </script>
 </body>
 </html>
 

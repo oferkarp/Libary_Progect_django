@@ -28,8 +28,8 @@ class CustomUser(AbstractUser):
 class Loan(models.Model):
     customer = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
-    loan_date = models.DateField(default=timezone.now)
-    return_date = models.DateField()
+    loan_date = models.DateTimeField(default=timezone.now)
+    return_date = models.DateTimeField()
 
     def __str__(self):
         return f"{self.customer.username} - {self.book.name}"

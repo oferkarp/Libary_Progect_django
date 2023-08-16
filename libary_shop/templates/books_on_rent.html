@@ -1,13 +1,67 @@
-{% extends 'base.html' %}
-{% load static %}
-{% block content %}
+<script>
+  function showTimeLeft(id, returnDateStr) {
+    console.log('returnDateStr:', returnDateStr);
+    var popup = document.getElementById('popup_' + id);
+    var popupContent = document.getElementById('popupContent' + id);
+
+    var months = {
+        "Jan.": 0, "Feb.": 1, "Mar.": 2, "Apr.": 3, "May": 4, "Jun.": 5,
+        "Jul.": 6, "Aug.": 7, "Sep.": 8, "Oct.": 9, "Nov.": 10, "Dec.": 11
+    };
+
+    var dateParts = returnDateStr.split(/[, ]+/);
+    var month = months[dateParts[0]];
+    var day = parseInt(dateParts[1]);
+    var year = parseInt(dateParts[2]);
+    var timeParts = dateParts[3].split(':');
+    var hour = parseInt(timeParts[0]);
+    var minute = parseInt(timeParts[1]);
+
+    if (dateParts[4] === "p.m.") {
+        hour += 12;
+    }
+
+    var returnDate = new Date(year, month, day, hour, minute);
+    console.log('returnDate:', returnDate);
+
+    var currentDate = new Date(); // Current date and time
+    console.log('currentDate:', currentDate);
+
+    var timeDiff = returnDate - currentDate; // Calculate time difference in milliseconds
+
+    if (timeDiff > 0) {
+        var daysLeft = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+        var hoursLeft = Math.floor((timeDiff / (1000 * 60 * 60)) % 24);
+
+        popupContent.innerHTML = 'Time left for loan: ' + daysLeft + ' days and ' + hoursLeft + ' hours';
+    } else {
+        popupContent.innerHTML = 'Loan has expired';
+    }
+
+    popup.style.display = 'block';
+}
+
+
+  function closePopup(id) {
+    var popup = document.getElementById('popup_' + id)
+    popup.style.display = 'none'
+  }
+</script>
+
+{% extends 'base.html' %} {% load static %} {% block content %}
 <div class="container-fluid bg-3 text-center">
   <h3>My loans</h3>
   <div class="row">
-    {% for loan in active_loans %} 
+    {% for loan in active_loans %}
     <div class="col-md-3">
       <div class="card mb-4 shadow-sm">
-        <img src="{% static loan.book.image.url %}" alt="{{ loan.book.name }}" class="bd-placeholder-img card-img-top" width="100%" height="225">
+        <img
+          src="{% static loan.book.image.url %}"
+          alt="{{ loan.book.name }}"
+          class="bd-placeholder-img card-img-top"
+          width="100%"
+          height="225"
+        />
         <div class="card-body">
           <h5 class="card-title">name : {{ loan.book.name }}</h5>
           <p class="card-text">author : {{ loan.book.author }}</p>
@@ -15,21 +69,31 @@
           <p class="card-text">Book Type: {{ loan.book.get_book_type_display }}</p>
           <div class="d-flex justify-content-between align-items-center">
             <div class="button-container">
-              <button type="button" class="btn btn-primary" data-return-date="{{ loan.return_date|date:'c' }}" data-loan-id="{{ loan.id }}" onclick="showTimeLeft(this)">See the time left</button>
-              <div class="popup" id="popup">
-                  <p id="popupContent"></p>
-                  <button type="button" onclick="closePopup()">Ok</button>
+              <button
+              type="button"
+              class="btn btn-primary"
+              data-return-date="{{ loan.return_date|date:'c' }}"
+              data-loan-id="{{ loan.id }}"
+            >
+              See the time left
+            </button>            
+              <div class="popup" id="popup_{{ loan.id }}">
+                <p id="popupContent{{ loan.id }}"></p>
+                <button type="button" onclick="closePopup('{{ loan.id }}')">Ok</button>
               </div>
-              
-              <!-- Unique container for time remaining information -->
-              <div class="time-left-container" id="timeLeftContainer_{{ loan.id }}"></div>
-            </div>      
+            </div>
+            <script>
+              document.querySelector('.btn-primary[data-loan-id="{{ loan.id }}"]').addEventListener('click', function () {
+                var returnDateStr = '{{ loan.return_date }}'; // ISO 8601 format from Django template
+                showTimeLeft('{{ loan.id }}', returnDateStr);
+            });         
+            </script>
             <div class="center-column">
               <form action="{% url 'return_book' %}" method="post">
                 {% csrf_token %}
-                <input type="hidden" name="loan_id" value="{{ loan.id }}">
+                <input type="hidden" name="loan_id" value="{{ loan.id }}" />
                 <button type="submit" class="btn btn-danger">Return loan</button>
-              </form>                       
+              </form>
             </div>
           </div>
         </div>
@@ -43,4 +107,3 @@
   </div>
 </div>
 {% endblock %}
-
