@@ -151,8 +151,12 @@ def return_book(request):
             loan = Loan.objects.get(id=loan_id)
             # print("Loan found:", loan)
             
-            # Delete the loan
-            loan.delete()
+            # Check if the loan belongs to the logged-in user
+            if loan.customer == request.user:
+                # Delete the loan
+                loan.delete()
+            else:
+                print("This loan does not belong to the logged-in user.")
             
         except Loan.DoesNotExist:
             print("Loan does not exist.")
@@ -209,15 +213,21 @@ def remove_book(request, book_id):
 
 
 @user_passes_test(is_superuser)
-@login_required(login_url='not_logged_in')  # Redirect to 'not_logged_in' view if user is not logged in
+@login_required(login_url='not_logged_in')
 def update_book(request, book_id):
     book = get_object_or_404(Book, id=book_id)
 
     if request.method == 'POST':
-        form = UpdateBookForm(request.POST, request.FILES, instance=book)  # Include request.FILES
+        form = UpdateBookForm(request.POST, request.FILES, instance=book)
         if form.is_valid():
             form.save()
-            return redirect('all_books')  # Redirect after successful update
+            return redirect('all_books')
+        else:
+            # Print out form errors for debugging
+            for field, errors in form.errors.items():
+                print(f"Field: {field}")
+                for error in errors:
+                    print(f"  Error: {error}")
     else:
         form = UpdateBookForm(instance=book)
 
