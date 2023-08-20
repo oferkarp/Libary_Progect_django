@@ -24,7 +24,7 @@ def books(request):
     all_books = Book.objects.all()
 
     if search_text:
-        all_books = all_books.filter(name__icontains=search_text)  # Change 'name' to the appropriate field name for book titles
+        all_books = all_books.filter(name__icontains=search_text)
 
     return render(request, 'index.html', {'all_books': all_books})
 
@@ -46,7 +46,7 @@ def books_on_rent(request):
 @login_required(login_url='not_logged_in')  # Redirect to 'not_logged_in' view if user is not logged in
 def books_available(request):
     # Fetch all loans that are currently active (loan_date is not in the future and return_date is null or in the future)
-    active_loans = Loan.objects.filter(loan_date__lte=timezone.now(), return_date__gte=timezone.now())
+    active_loans = Loan.objects.filter(loan_date__lte=timezone.now(), return_date__isnull=False)
 
     # Get the list of Book objects from the active loans
     active_books = [loan.book for loan in active_loans]
@@ -151,8 +151,8 @@ def return_book(request):
             loan = Loan.objects.get(id=loan_id)
             # print("Loan found:", loan)
             
-            # Check if the loan belongs to the logged-in user
-            if loan.customer == request.user:
+            # Check if the user is a superuser or the loan's owner
+            if request.user.is_superuser or loan.customer == request.user:
                 # Delete the loan
                 loan.delete()
             else:
@@ -160,8 +160,11 @@ def return_book(request):
             
         except Loan.DoesNotExist:
             print("Loan does not exist.")
+            
+    # Get the referring page's URL
+    referer = request.META.get('HTTP_REFERER', '/')    
 
-    return redirect('Books_rent')  # Redirect to appropriate view after returning
+    return redirect(referer)  # Redirect back to the referring page
 
 
 def custom_404(request, exception):
