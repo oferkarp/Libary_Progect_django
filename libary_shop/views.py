@@ -34,7 +34,7 @@ def books_on_rent(request):
     user = request.user
     # print("Logged in user:", user)
     
-    active_loans = Loan.objects.filter(customer=user, loan_date__lte=timezone.now(), return_date__gte=timezone.now())
+    active_loans = Loan.objects.filter(customer=user, loan_date__lte=timezone.now(), return_date__isnull=False)
     # print("Active Loans:", active_loans)  
 
     # for loan in active_loans:
