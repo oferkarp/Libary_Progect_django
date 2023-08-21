@@ -30,6 +30,9 @@ To access the site as a superuser:
 ### Regular User Access
 To access the site as a regular user:
 - Register on the site or log in using your credentials
+- or enter this user
+- Username: elad
+- Password: 1234
 
 ## Running Locally
 
