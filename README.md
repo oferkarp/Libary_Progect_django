@@ -10,6 +10,7 @@ This project is a management system for a library, built using a combination of 
 - Update book details
 - Cancel loans
 - View all loans and identify overdue loans
+- and all the regular user features
 
 ### Regular User Features
 - Loan books
@@ -17,6 +18,7 @@ This project is a management system for a library, built using a combination of 
 - View the remaining loan time
 - See available books for loan
 - See their own loans
+- search book by name
 
 ## Accessing the Site
 
