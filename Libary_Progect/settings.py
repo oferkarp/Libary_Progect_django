@@ -82,12 +82,11 @@ DATABASES = {
     # }
      'default': {
            'ENGINE': 'django.db.backends.postgresql_psycopg2',
-           'NAME': 'django_libary',
-           'USER': 'ofer',
-           'PASSWORD': 'R2prRjdVIJBwZKtccoze5nnETOnItuYb',
-           'HOST': 'dpg-cjejd0me546c73ct14ug-a.oregon-postgres.render.com',      
+           'NAME': 'django_libary_2',
+           'USER': 'django_libary_2_user',
+           'PASSWORD': 'ycuuP7aOvojtXVfaUVES22yHVfHTa9Fz',
+           'HOST': 'dpg-clf8dglsqvhs73ebg3v0-a.oregon-postgres.render.com',      
            'PORT': '5432',
-
         }
 }
 
