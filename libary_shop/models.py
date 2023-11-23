@@ -12,7 +12,7 @@ class Book(models.Model):
     author = models.CharField(max_length=100)
     year_published = models.IntegerField()
     book_type = models.CharField(max_length=1, choices=BookType.choices)
-    image = models.ImageField(upload_to="books_images", default="/static/books_images/books.png")
+    image = models.ImageField(upload_to="books_images", default="/books_images/books.png")
 
 
     def __str__(self):
