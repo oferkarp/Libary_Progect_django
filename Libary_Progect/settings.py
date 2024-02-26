@@ -80,12 +80,20 @@ DATABASES = {
     #     'ENGINE': 'django.db.backends.sqlite3',
     #     'NAME': BASE_DIR / 'db.sqlite3',
     # }
-     'default': {
+    #  'default': {
+    #        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+    #        'NAME': 'django_libary_2',
+    #        'USER': 'django_libary_2_user',
+    #        'PASSWORD': 'ycuuP7aOvojtXVfaUVES22yHVfHTa9Fz',
+    #        'HOST': 'dpg-clf8dglsqvhs73ebg3v0-a.oregon-postgres.render.com',      
+    #        'PORT': '5432',
+    #     }
+         'default': {
            'ENGINE': 'django.db.backends.postgresql_psycopg2',
-           'NAME': 'django_libary_2',
-           'USER': 'django_libary_2_user',
-           'PASSWORD': 'ycuuP7aOvojtXVfaUVES22yHVfHTa9Fz',
-           'HOST': 'dpg-clf8dglsqvhs73ebg3v0-a.oregon-postgres.render.com',      
+           'NAME': 'django_libary_3',
+           'USER': 'django_libary_3_user',
+           'PASSWORD': 'mw6TSWgdGpOMJIE5BCIw2jERNEn0w7Jp',
+           'HOST': 'dpg-cne6v05a73kc73b97ud0-a.oregon-postgres.render.com',      
            'PORT': '5432',
         }
 }
